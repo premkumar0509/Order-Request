@@ -33,10 +33,18 @@ table 50010 "Order Request"
         {
             DataClassification = ToBeClassified;
         }
-        field(8; "Preferred contact method"; Option)
+        field(8; "Preferred Contact Method"; Option)
         {
             DataClassification = ToBeClassified;
             OptionMembers = Email,"Phone No.";
+        }
+        field(9; "Order ID"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(10; "Time stamp"; DateTime)
+        {
+            DataClassification = ToBeClassified;
         }
     }
 

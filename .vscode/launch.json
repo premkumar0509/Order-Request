@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Microsoft cloud sandbox",
+            "name": "Sandbox-Dev",
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
@@ -12,7 +12,9 @@
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
-            "enableSqlInformationDebugger": true
+            "enableSqlInformationDebugger": true,
+            "tenant": "1b53b3cd-3eb8-4d53-8d02-e11a98cf1f76",
+            "schemaUpdateMode": "ForceSync"
         }
     ]
 }

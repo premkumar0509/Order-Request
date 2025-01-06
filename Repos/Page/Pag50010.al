@@ -16,6 +16,10 @@ page 50010 "Order Request"
                 {
                     ToolTip = 'Specifies the value of the Entry No. field.';
                 }
+                field("Time stamp"; Rec."Time stamp")
+                {
+                    ToolTip = 'Specifies the value of the Time Stamp field.';
+                }
                 field("Customer No."; Rec."Customer No.")
                 {
                     ToolTip = 'Specifies the value of the Customer No. field.';
@@ -40,7 +44,7 @@ page 50010 "Order Request"
                 {
                     ToolTip = 'Specifies the value of the Email field.';
                 }
-                field("Preferred contact method"; Rec."Preferred contact method")
+                field("Preferred contact method"; Rec."Preferred Contact Method")
                 {
                     ToolTip = 'Specifies the value of the Preferred contact method field.';
                 }
@@ -48,10 +52,27 @@ page 50010 "Order Request"
         }
     }
 
-    trigger OnOpenPage()
-    var
-        OrderRequestManagement: Codeunit "Order Request Management";
-    begin
-        OrderRequestManagement.SyncOrderRequestFromWeb();
-    end;
+    actions
+    {
+        area(Processing)
+        {
+            action("Sync Order Request")
+            {
+                ApplicationArea = All;
+                Image = OutlookSyncFields;
+                trigger OnAction()
+                var
+                    OrderRequestManagement: Codeunit "Order Request Management";
+                begin
+                    OrderRequestManagement.SyncOrderRequestFromWeb();
+                end;
+            }
+        }
+        area(Promoted)
+        {
+            actionref(SyncOrderRequest_Promoted; "Sync Order Request")
+            {
+            }
+        }
+    }
 }
