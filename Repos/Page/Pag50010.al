@@ -5,6 +5,9 @@ page 50010 "Order Request"
     PageType = List;
     SourceTable = "Order Request";
     UsageCategory = Lists;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
+    InsertAllowed = false;
 
     layout
     {
