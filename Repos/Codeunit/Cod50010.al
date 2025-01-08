@@ -55,6 +55,49 @@ codeunit 50010 "Order Request Management"
         end;
     end;
 
+    procedure MakeOrder(OrderRequest: Record "Order Request")
+    var
+        Customer: Record Customer;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Item: Record Item;
+    begin
+        // Check if customer exists
+        if not Customer.Get(OrderRequest."Customer No.") then begin
+            Customer.Init();
+            Customer."No." := OrderRequest."Customer No.";
+            Customer.Name := OrderRequest."Customer Name"; // Set customer name 
+            Customer."Phone No." := OrderRequest."Phone No."; // Set phone number 
+            Customer."E-Mail" := OrderRequest.Email; // Set email 
+            Customer."Customer Posting Group" := 'DOMESTIC'; // Set email 
+            Customer."Gen. Bus. Posting Group" := 'DOMESTIC';
+            Customer.Insert(true);
+        end;
+
+        // Initialize Sales Header
+        SalesHeader.Init();
+        SalesHeader."Document Type" := SalesHeader."Document Type"::Order;
+        SalesHeader.Validate("Sell-to Customer No.", OrderRequest."Customer No.");
+        SalesHeader.Insert(true);
+
+        // Initialize Sales Line
+        Item.Get(OrderRequest."Item No.");
+        SalesLine.Init();
+        SalesLine."Document Type" := SalesLine."Document Type"::Order;
+        SalesLine."Document No." := SalesHeader."No.";
+        SalesLine."Line No." := 10000;
+        SalesLine.Validate(Type, SalesLine.Type::Item);
+        SalesLine.Validate("No.", Item."No.");
+        SalesLine.Validate(Quantity, OrderRequest.Quantity); // Set quantity
+        SalesLine.Insert(true);
+
+        OrderRequest."Order No." := SalesHeader."No.";
+        OrderRequest.Status := OrderRequest.Status::"Order Created";
+        OrderRequest.Modify();
+        Message('Order %1 has been created.', SalesHeader."No.");
+    end;
+
+
     local procedure GetLastOrderRequestEntryNo(): Integer
     var
         OrderRequest: Record "Order Request";
@@ -62,12 +105,5 @@ codeunit 50010 "Order Request Management"
         if OrderRequest.FindLast() then
             exit(OrderRequest."Entry No.");
         exit(0);
-    end;
-
-
-
-    local procedure GetValue(InputText: Text): Variant
-    begin
-        exit(InputText)
     end;
 }

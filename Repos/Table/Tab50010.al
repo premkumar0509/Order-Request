@@ -46,6 +46,20 @@ table 50010 "Order Request"
         {
             DataClassification = ToBeClassified;
         }
+        field(11; Quantity; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(12; Status; Option)
+        {
+            OptionMembers = Open,Error,"Order Created";
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(13; "Order No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

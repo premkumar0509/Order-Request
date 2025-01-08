@@ -24,7 +24,7 @@
       "server": "http://localhost:8080/BC252",
       "serverInstance": "BC252",
       "authentication": "UserPassword",
-      "startupObjectId": 22,
+      "startupObjectId": 50010,
       "breakOnError": "All",
       "breakOnRecordWrite": "None",
       "launchBrowser": true,
