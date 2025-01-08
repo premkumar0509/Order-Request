@@ -54,4 +54,10 @@ table 50010 "Order Request"
         {
         }
     }
+
+    trigger OnInsert();
+    begin
+        if Rec."Time stamp" = 0DT then
+            Rec."Time stamp" := CurrentDateTime;
+    end;
 }

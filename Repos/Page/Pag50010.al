@@ -5,9 +5,9 @@ page 50010 "Order Request"
     PageType = List;
     SourceTable = "Order Request";
     UsageCategory = Lists;
-    ModifyAllowed = false;
-    DeleteAllowed = false;
-    InsertAllowed = false;
+    // ModifyAllowed = false;
+    // DeleteAllowed = false;
+    // InsertAllowed = false;
 
     layout
     {
@@ -47,7 +47,7 @@ page 50010 "Order Request"
                 {
                     ToolTip = 'Specifies the value of the Email field.';
                 }
-                field("Preferred contact method"; Rec."Preferred Contact Method")
+                field("Preferred Contact Method"; Rec."Preferred Contact Method")
                 {
                     ToolTip = 'Specifies the value of the Preferred contact method field.';
                 }

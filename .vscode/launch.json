@@ -1,20 +1,38 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Sandbox-Dev",
-            "request": "launch",
-            "type": "al",
-            "environmentType": "Sandbox",
-            "environmentName": "Sandbox-Dev",
-            "startupObjectId": 50010,
-            "startupObjectType": "Page",
-            "breakOnError": "All",
-            "launchBrowser": true,
-            "enableLongRunningSqlStatements": true,
-            "enableSqlInformationDebugger": true,
-            "tenant": "1b53b3cd-3eb8-4d53-8d02-e11a98cf1f76",
-            "schemaUpdateMode": "ForceSync"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Sandbox-Dev",
+      "request": "launch",
+      "type": "al",
+      "environmentType": "Sandbox",
+      "environmentName": "Sandbox-Dev",
+      "startupObjectId": 50010,
+      "startupObjectType": "Page",
+      "breakOnError": "All",
+      "launchBrowser": true,
+      "enableLongRunningSqlStatements": true,
+      "enableSqlInformationDebugger": true,
+      "tenant": "1b53b3cd-3eb8-4d53-8d02-e11a98cf1f76",
+      "schemaUpdateMode": "ForceSync"
+    },
+    {
+      "name": "BC252",
+      "type": "al",
+      "request": "launch",
+      "environmentType": "OnPrem",
+      "server": "http://localhost:8080/BC252",
+      "serverInstance": "BC252",
+      "authentication": "UserPassword",
+      "startupObjectId": 22,
+      "breakOnError": "All",
+      "breakOnRecordWrite": "None",
+      "launchBrowser": true,
+      "enableSqlInformationDebugger": true,
+      "enableLongRunningSqlStatements": true,
+      "longRunningSqlStatementsThreshold": 500,
+      "numberOfSqlStatements": 10,
+      "tenant": "default"
+    }
+  ]
 }
