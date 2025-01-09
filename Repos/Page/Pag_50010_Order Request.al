@@ -87,6 +87,7 @@ page 50010 "Order Request"
             {
                 ApplicationArea = All;
                 Image = OutlookSyncFields;
+                ToolTip = 'Executes the Sync Order Request action.';
                 trigger OnAction()
                 var
                     OrderRequestManagement: Codeunit "Order Request Management";
@@ -98,12 +99,20 @@ page 50010 "Order Request"
             {
                 ApplicationArea = All;
                 Image = MakeOrder;
+                ToolTip = 'Executes the Make Order action.';
                 trigger OnAction()
                 var
                     OrderRequestManagement: Codeunit "Order Request Management";
                 begin
                     OrderRequestManagement.MakeOrder(Rec);
                 end;
+            }
+            action(Setup)
+            {
+                ApplicationArea = All;
+                Image = Setup;
+                RunObject = Page "Order Request Setup";
+                ToolTip = 'Executes the Setup action.';
             }
         }
         area(Promoted)
@@ -112,6 +121,9 @@ page 50010 "Order Request"
             {
             }
             actionref(MakeOrder_Promoted; "Make Order")
+            {
+            }
+            actionref(Setup_Promoted; Setup)
             {
             }
         }

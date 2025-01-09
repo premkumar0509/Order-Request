@@ -3,54 +3,54 @@ codeunit 50010 "Order Request Management"
 
     trigger OnRun();
     begin
-        SyncOrderRequestFromWeb();
+        this.SyncOrderRequestFromWeb();
     end;
 
     procedure SyncOrderRequestFromWeb()
     var
-        CSVBuffer: Record "CSV Buffer" temporary;
-        TypeHelper: Codeunit "Type Helper";
+        TempCSVBuffer: Record "CSV Buffer" temporary;
         OrderRequest: Record "Order Request";
-        HttpClient: HttpClient;
-        HttpRequestMessage: HttpRequestMessage;
-        HttpResponseMessage: HttpResponseMessage;
+        OrderRequestSetup: Record "Order Request Setup";
+        Client: HttpClient;
+        APIResponse: HttpResponseMessage;
         InStream: InStream;
         LineNo: Integer;
         IsAlreadyExists: Boolean;
     begin
-        HttpRequestMessage.SetRequestUri('https://docs.google.com/spreadsheets/d/e/2PACX-1vQRrpjcg3Uv9KR-c4X8DoEPk-VclI6clfkK0C30Z4SrfvE-qS85DsKddEKyE6c3zvaEQ7KawfCb2CmT/pub?gid=1693383694&single=true&output=csv');
-        HttpRequestMessage.Method := 'GET';
+        OrderRequestSetup.Get();
+        OrderRequestSetup.TestField("Form URL");
 
-        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
-            if HttpResponseMessage.IsSuccessStatusCode() then begin
-                HttpResponseMessage.Content().ReadAs(InStream);
-                CSVBuffer.LoadDataFromStream(InStream, ',');
+        if not Client.Get(OrderRequestSetup."Form URL", APIResponse) then
+            Error(GetLastErrorText());
 
-                for LineNo := 2 to CSVBuffer.GetNumberOfLines() do begin
-                    OrderRequest.SetFilter("Time stamp", CSVBuffer.GetValue(LineNo, 1));
-                    if OrderRequest.FindFirst() then
-                        IsAlreadyExists := true;
+        if APIResponse.IsSuccessStatusCode() then begin
+            APIResponse.Content().ReadAs(InStream);
+            TempCSVBuffer.LoadDataFromStream(InStream, ',');
 
-                    if not IsAlreadyExists then begin
-                        OrderRequest.Reset();
-                        OrderRequest.Init();
-                        OrderRequest."Entry No." := GetLastOrderRequestEntryNo() + 1;
-                    end;
-                    Evaluate(OrderRequest."Time stamp", CSVBuffer.GetValue(LineNo, 1));
-                    OrderRequest."Customer No." := CSVBuffer.GetValue(LineNo, 3);
-                    OrderRequest."Customer Name" := CSVBuffer.GetValue(LineNo, 4);
-                    OrderRequest."Phone No." := CSVBuffer.GetValue(LineNo, 5);
-                    OrderRequest.Email := CSVBuffer.GetValue(LineNo, 6);
-                    if Format(OrderRequest."Preferred Contact Method"::"Phone No.") = CSVBuffer.GetValue(LineNo, 7) then
-                        OrderRequest."Preferred Contact Method" := OrderRequest."Preferred Contact Method"::"Phone No.";
-                    OrderRequest."Item No." := CSVBuffer.GetValue(LineNo, 8);
-                    OrderRequest."Item Variant" := CSVBuffer.GetValue(LineNo, 9);
+            for LineNo := 2 to TempCSVBuffer.GetNumberOfLines() do begin
+                OrderRequest.SetFilter("Time stamp", TempCSVBuffer.GetValue(LineNo, 1));
+                if OrderRequest.FindFirst() then
+                    IsAlreadyExists := true;
 
-                    if not IsAlreadyExists then
-                        OrderRequest.Insert()
-                    else
-                        OrderRequest.Modify();
+                if not IsAlreadyExists then begin
+                    OrderRequest.Reset();
+                    OrderRequest.Init();
+                    OrderRequest."Entry No." := GetLastOrderRequestEntryNo() + 1;
                 end;
+
+                OrderRequest."Customer No." := CopyStr(TempCSVBuffer.GetValue(LineNo, 3), 1, MaxStrLen(OrderRequest."Customer No."));
+                OrderRequest."Customer Name" := CopyStr(TempCSVBuffer.GetValue(LineNo, 4), 1, MaxStrLen(OrderRequest."Customer Name"));
+                OrderRequest."Phone No." := CopyStr(TempCSVBuffer.GetValue(LineNo, 5), 1, MaxStrLen(OrderRequest."Phone No."));
+                OrderRequest.Email := CopyStr(TempCSVBuffer.GetValue(LineNo, 6), 1, MaxStrLen(OrderRequest.Email));
+                OrderRequest."Item No." := CopyStr(TempCSVBuffer.GetValue(LineNo, 7), 1, MaxStrLen(OrderRequest."Item No."));
+
+                Evaluate(OrderRequest."Time stamp", TempCSVBuffer.GetValue(LineNo, 1));
+                Evaluate(OrderRequest.Quantity, TempCSVBuffer.GetValue(LineNo, 8));
+
+                if not IsAlreadyExists then
+                    OrderRequest.Insert()
+                else
+                    OrderRequest.Modify();
             end;
         end;
     end;
