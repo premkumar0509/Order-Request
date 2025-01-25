@@ -21,7 +21,7 @@ table 50010 "Order Request"
         {
             DataClassification = ToBeClassified;
         }
-        field(5; "Item Variant"; Code[10])
+        field(5; "Item Description"; Text[100])
         {
             DataClassification = ToBeClassified;
         }
@@ -33,16 +33,11 @@ table 50010 "Order Request"
         {
             DataClassification = ToBeClassified;
         }
-        field(8; "Preferred Contact Method"; Option)
-        {
-            DataClassification = ToBeClassified;
-            OptionMembers = Email,"Phone No.";
-        }
         field(9; "Order ID"; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(10; "Time stamp"; DateTime)
+        field(10; "Submitted DateTime"; DateTime)
         {
             DataClassification = ToBeClassified;
         }
@@ -60,6 +55,19 @@ table 50010 "Order Request"
         {
             DataClassification = ToBeClassified;
         }
+        field(14; "Order Confirmation Mail Sent"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(15; "Error Message"; Text[250])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(16; "Synced From"; Option)
+        {
+            OptionMembers = "Google Form","Microsoft Form";
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys
@@ -71,7 +79,7 @@ table 50010 "Order Request"
 
     trigger OnInsert();
     begin
-        if Rec."Time stamp" = 0DT then
-            Rec."Time stamp" := CurrentDateTime;
+        if Rec."Submitted DateTime" = 0DT then
+            Rec."Submitted DateTime" := CurrentDateTime;
     end;
 }

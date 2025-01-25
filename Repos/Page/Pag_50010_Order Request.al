@@ -5,9 +5,9 @@ page 50010 "Order Request"
     PageType = List;
     SourceTable = "Order Request";
     UsageCategory = Lists;
-    // ModifyAllowed = false;
-    // DeleteAllowed = false;
-    // InsertAllowed = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
+    InsertAllowed = false;
 
     layout
     {
@@ -19,13 +19,21 @@ page 50010 "Order Request"
                 {
                     ToolTip = 'Specifies the value of the Entry No. field.';
                 }
-                field("Time stamp"; Rec."Time stamp")
+                field("Submitted DateTime"; Rec."Submitted DateTime")
                 {
-                    ToolTip = 'Specifies the value of the Time Stamp field.';
+                    ToolTip = 'Specifies the value of the Submitted DateTime field.';
                 }
                 field("Customer No."; Rec."Customer No.")
                 {
                     ToolTip = 'Specifies the value of the Customer No. field.';
+                    Editable = false;
+                    trigger OnDrillDown();
+                    var
+                        Customer: Record Customer;
+                    begin
+                        if Customer.Get(Rec."Customer No.") then
+                            Page.Run(Page::"Customer Card", Customer);
+                    end;
                 }
                 field("Customer Name"; Rec."Customer Name")
                 {
@@ -39,9 +47,9 @@ page 50010 "Order Request"
                 {
                     ToolTip = 'Specifies the value of the Quantity field.';
                 }
-                field("Item Variant"; Rec."Item Variant")
+                field("Item Description"; Rec."Item Description")
                 {
-                    ToolTip = 'Specifies the value of the Item Variant field.';
+                    ToolTip = 'Specifies the value of the Item Description field.';
                 }
                 field("Phone No."; Rec."Phone No.")
                 {
@@ -50,10 +58,6 @@ page 50010 "Order Request"
                 field(Email; Rec.Email)
                 {
                     ToolTip = 'Specifies the value of the Email field.';
-                }
-                field("Preferred Contact Method"; Rec."Preferred Contact Method")
-                {
-                    ToolTip = 'Specifies the value of the Preferred contact method field.';
                 }
                 field("Order No."; Rec."Order No.")
                 {
@@ -67,9 +71,19 @@ page 50010 "Order Request"
                             Page.Run(Page::"Sales Order", SalesHeader);
                     end;
                 }
+                field("Order Confirmation Mail Sent"; Rec."Order Confirmation Mail Sent")
+                {
+                    ToolTip = 'Specifies the value of the Order Confirmation Mail Sent field.';
+                    StyleExpr = this.StatusStyle;
+                }
                 field(Status; Rec.Status)
                 {
                     ToolTip = 'Specifies the value of the Status field.';
+                    StyleExpr = this.StatusStyle;
+                }
+                field("Error Message"; Rec."Error Message")
+                {
+                    ToolTip = 'Specifies the value of the Error Message field.';
                 }
                 field("Order ID"; Rec."Order ID")
                 {
@@ -92,7 +106,7 @@ page 50010 "Order Request"
                 var
                     OrderRequestManagement: Codeunit "Order Request Management";
                 begin
-                    OrderRequestManagement.SyncOrderRequestFromWeb();
+                    OrderRequestManagement.SyncOrderRequest();
                 end;
             }
             action("Make Order")
@@ -107,12 +121,31 @@ page 50010 "Order Request"
                     OrderRequestManagement.MakeOrder(Rec);
                 end;
             }
+            action("Send Mail")
+            {
+                ApplicationArea = All;
+                Image = SendMail;
+                ToolTip = 'Executes the Send Mail action.';
+                trigger OnAction()
+                var
+                    OrderRequestManagement: Codeunit "Order Request Management";
+                begin
+                    OrderRequestManagement.SendOrderConfirmationMail();
+                end;
+            }
             action(Setup)
             {
                 ApplicationArea = All;
                 Image = Setup;
                 RunObject = Page "Order Request Setup";
                 ToolTip = 'Executes the Setup action.';
+            }
+            action(Dashboard)
+            {
+                ApplicationArea = All;
+                Image = SelectChart;
+                RunObject = Page "Order Request Dashboard";
+                ToolTip = 'Executes the Dashboard action.';
             }
         }
         area(Promoted)
@@ -123,9 +156,34 @@ page 50010 "Order Request"
             actionref(MakeOrder_Promoted; "Make Order")
             {
             }
+            actionref(SendMail_Promoted; "Send Mail")
+            {
+            }
             actionref(Setup_Promoted; Setup)
+            {
+            }
+            actionref(Dashboard_Promoted; Dashboard)
             {
             }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        this.StatusStyle := this.GetStatusStyle();
+    end;
+
+    local procedure GetStatusStyle(): Text
+    begin
+        case Rec.Status of
+            Rec.Status::Open:
+                exit('Strong');
+            Rec.Status::"Order Created":
+                exit('Favorable');
+            Rec.Status::Error:
+                exit('Unfavorable')
+        end;
+    end;
+
+    var
+        StatusStyle: Text;
 }

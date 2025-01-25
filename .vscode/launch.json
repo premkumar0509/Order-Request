@@ -32,7 +32,22 @@
       "enableLongRunningSqlStatements": true,
       "longRunningSqlStatementsThreshold": 500,
       "numberOfSqlStatements": 10,
-      "tenant": "default"
+      "tenant": "default",
+      "schemaUpdateMode": "ForceSync"
+    },
+    {
+      "name": "Attach: Sandbox",
+      "type": "al",
+      "request": "attach",
+      "environmentType": "Sandbox",
+      "environmentName": "Sandbox-Dev",
+      "breakOnError": "All",
+      "breakOnRecordWrite": "None",
+      "enableSqlInformationDebugger": true,
+      "enableLongRunningSqlStatements": true,
+      "longRunningSqlStatementsThreshold": 500,
+      "numberOfSqlStatements": 10,
+      "breakOnNext": "WebClient"
     }
   ]
 }
