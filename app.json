@@ -1,6 +1,6 @@
 {
   "id": "606e0928-f88c-41d2-ad06-1a09df8b9d45",
-  "name": "Google Form Integration",
+  "name": "Order Request",
   "publisher": "PK",
   "version": "1.0.0.0",
   "brief": "",
@@ -9,7 +9,7 @@
   "EULA": "",
   "help": "",
   "url": "",
-  "logo": "",
+  "logo": "./Repos/Logo/OrderRequest-logo.png",
   "dependencies": [
     {
       "id": "e4e86220-cac0-4ec3-b853-7c2fa610399d",
