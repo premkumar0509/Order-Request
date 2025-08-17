@@ -47,7 +47,8 @@
       "enableLongRunningSqlStatements": true,
       "longRunningSqlStatementsThreshold": 500,
       "numberOfSqlStatements": 10,
-      "breakOnNext": "WebClient"
+      "breakOnNext": "WebClient",
+      "sessionId": 1350
     }
   ]
 }
