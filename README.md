@@ -120,9 +120,9 @@ Then open in VS Code and deploy the extension to your BC sandbox using `Ctrl + F
 
 - [x] Google Form integration (CSV)  
 - [ ] Microsoft Form integration (Excel Online)  
-- [ ] Sales order auto-creation  
-- [ ] Email confirmation system  
-- [ ] Power BI dashboard integration  
+- [x] Sales order auto-creation  
+- [x] Email confirmation system  
+- [x] Power BI dashboard integration  
 - [ ] Teams notification after order confirmation  
 
 ---
